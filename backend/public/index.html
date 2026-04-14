@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chikenpedia Admin Control Panel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    
+    :root {
+      --primary-color: #ff6b6b;
+      --bg-color: #0d0f12;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 107, 107, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255, 168, 54, 0.1) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid var(--card-border);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .nav-item {
+      padding: 1rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255, 107, 107, 0.2);
+      color: var(--primary-color);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 3rem;
+    }
+
+    .header {
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.1);
+    }
+
+    .metric-title {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+    }
+
+    /* Table Styles */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background: rgba(255, 107, 107, 0.1);
+      color: var(--primary-color);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .btn-add {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      float: right;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="brand">Chikenpedia Admin</div>
+    <div class="nav-item active" onclick="showSection('dashboard', this)">Dashboard</div>
+    <div class="nav-item" onclick="showSection('orders', this)">Orders</div>
+    <div class="nav-item" onclick="showSection('products', this)">Products</div>
+    <div class="nav-item" onclick="showSection('status', this)">System Status</div>
+  </div>
+
+
+  <div class="main-content">
+    <!-- Dashboard Section -->
+    <div id="section-dashboard" class="section active">
+      <div class="header">
+        <h1>Dashboard Overview</h1>
+        <p style="color: var(--text-muted)">Live metrics across PostgreSQL and MongoDB architectures.</p>
+      </div>
+
+      <div class="grid">
+        <div class="metric-card">
+          <div class="metric-title">Total Users</div>
+          <div class="metric-value" id="val-users">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Revenue Today</div>
+          <div class="metric-value" id="val-revenue">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Active Orders</div>
+          <div class="metric-value" id="val-orders">--</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Top Product</div>
+          <div class="metric-value" style="font-size: 1.5rem" id="val-product">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Section -->
+    <div id="section-orders" class="section">
+      <div class="header">
+        <h1>Recent Orders</h1>
+        <p style="color: var(--text-muted)">Monitor live orders coming from MongoDB.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="order-table-body">
+          <!-- Orders will be injected here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Products Section -->
+    <div id="section-products" class="section">
+
+      <div class="header">
+        <button class="btn-add">Add Product</button>
+        <h1>Product Management</h1>
+        <p style="color: var(--text-muted)">Manage your fried chicken inventory stored in PostgreSQL.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body">
+          <!-- Products will be injected here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+    function showSection(sectionId, el) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Show targeted section
+      document.getElementById('section-' + sectionId).classList.add('active');
+      
+      // Update nav styles
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      el.classList.add('active');
+
+      if (sectionId === 'products') {
+        fetchProducts();
+      } else if (sectionId === 'orders') {
+        fetchOrders();
+      }
+    }
+
+    async function fetchMetrics() {
+      try {
+        const res = await fetch('/api/admin/metrics');
+        const data = await res.json();
+        
+        document.getElementById('val-users').innerText = data.totalUsers.toLocaleString();
+        document.getElementById('val-revenue').innerText = '$' + data.revenueToday.toLocaleString();
+        document.getElementById('val-orders').innerText = data.activeOrders;
+        document.getElementById('val-product').innerText = data.topProduct;
+      } catch (err) {
+        console.error('Failed to fetch metrics:', err);
+      }
+    }
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch('/api/admin/orders');
+        const orders = await res.json();
+        const tbody = document.getElementById('order-table-body');
+        tbody.innerHTML = '';
+
+        orders.forEach(o => {
+          const itemCount = o.items ? o.items.reduce((s, i) => s + i.quantity, 0) : 0;
+          const row = `
+            <tr>
+              <td><small>${o._id}</small></td>
+              <td>${itemCount} items</td>
+              <td style="color: var(--primary-color); font-weight: 600">$${o.total.toFixed(2)}</td>
+              <td><span style="background: rgba(255,107,107,0.2); color: var(--primary-color); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem">${o.status}</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem">${new Date(o.createdAt).toLocaleString()}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Failed to fetch orders:', err);
+      }
+    }
+
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        const tbody = document.getElementById('product-table-body');
+        tbody.innerHTML = '';
+
+        products.forEach(p => {
+          const row = `
+            <tr>
+              <td>${p.id}</td>
+              <td style="font-weight: 600">${p.name}</td>
+              <td style="color: var(--text-muted)">${p.description}</td>
+              <td style="color: var(--primary-color); font-weight: 600">$${p.price}</td>
+              <td>
+                <button style="background: none; border: 1px solid var(--card-border); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Edit</button>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+      }
+    }
+    
+    // Fetch immediately and poll every 30s
+    fetchMetrics();
+    setInterval(fetchMetrics, 30000);
+  </script>
+
+</body>
+</html>

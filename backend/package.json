@@ -1,0 +1,15 @@
+{
+  "name": "chikenpedia-backend",
+  "version": "1.0.0",
+  "description": "Backend for Chikenpedia",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "mongodb": "^6.5.0",
+    "cors": "^2.8.5"
+  }
+}

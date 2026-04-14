@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "7503:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_URL=postgresql://chiken_user:chiken_pass@postgres:5432/chiken_db
+      - MONGO_URL=mongodb://mongo:27017/chiken_db
+    depends_on:
+      - postgres
+      - mongo
+    restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=chiken_user
+      - POSTGRES_PASSWORD=chiken_pass
+      - POSTGRES_DB=chiken_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - "5051:80"
+
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    depends_on:
+
+      - postgres
+    restart: always
+
+
+volumes:
+  postgres_data:
+  mongo_data:

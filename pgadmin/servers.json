@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Chikenpedia DB",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "chiken_db",
+      "Username": "chiken_user",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}
