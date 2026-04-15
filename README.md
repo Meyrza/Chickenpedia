@@ -1,10 +1,10 @@
-# 🍗 Chikenpedia: Premium Fried Chicken E-Commerce
+# Chikenpedia: Premium Fried Chicken E-Commerce
 
 Chikenpedia is a high-performance, full-stack e-commerce platform designed for a premium fried chicken company. Built with a modern glassmorphic aesthetic and a robust containerized architecture, it delivers a cinematic shopping experience from browsing to checkout.
 
 ![Professional Hero Section](./frontend/public/images/hero.png)
 
-## 🚀 Features
+## Features
 
 - **Cinematic Frontend**: A beautifully crafted Next.js storefront featuring high-resolution food photography, smooth fadeInUp animations, and a responsive glassmorphism UI.
 - **Dynamic Shopping Cart**: A functional side-drawer cart system with real-time total calculations and quantity management.
@@ -15,14 +15,14 @@ Chikenpedia is a high-performance, full-stack e-commerce platform designed for a
 - **Full Docker Integration**: Orchestrated with Docker Compose for seamless one-command deployment of the entire stack (Frontend, Backend, Postgres, Mongo, and pgAdmin).
 - **Integrated DB Management**: Built-in **pgAdmin4** service for easy PostgreSQL visualization and management.
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Frontend**: [Next.js](https://nextjs.org/) (App Router), TypeScript, Vanilla CSS.
 - **Backend**: [Node.js](https://nodejs.org/), Express.
 - **Databases**: [PostgreSQL](https://www.postgresql.org/), [MongoDB](https://www.mongodb.com/).
 - **DevOps**: [Docker](https://www.docker.com/), Docker Compose.
 
-## 📦 Project Structure
+## Project Structure
 
 ```text
 henpedia/
@@ -32,7 +32,7 @@ henpedia/
 └── docker-compose.yml
 ```
 
-## 🚥 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Docker & Docker Compose installed on your machine.
@@ -52,7 +52,7 @@ henpedia/
    - **Admin Dashboard**: [http://localhost:8080/admin/](http://localhost:8080/admin/)
    - **pgAdmin**: [http://localhost:5051](http://localhost:5051) (`admin@admin.com` / `admin123`)
 
-## 👨‍💻 Development
+## Development
 
 The backend automatically initializes the PostgreSQL schema and seeds the initial menu items on first run. Orders placed on the frontend are transmitted to the backend and persisted in the MongoDB `orders` collection.
 
